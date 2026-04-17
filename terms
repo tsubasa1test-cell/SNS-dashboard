@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利用規約 | 株式会社PASSPOLE</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            border-bottom: 2px solid #fe2c55; /* TikTok風のアクセントカラー */
+            padding-bottom: 10px;
+            font-size: 24px;
+        }
+        h2 {
+            font-size: 18px;
+            margin-top: 30px;
+            color: #fe2c55;
+        }
+        p, li {
+            font-size: 15px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TikTok分析ダッシュボード 利用規約</h1>
+        <p>この利用規約（以下「本規約」）は、株式会社PASSPOLE（以下「当社」）が提供する「TikTok分析ダッシュボード」（以下「本サービス」）の利用条件を定めるものです。アカウントを利用する全てのユーザーに適用されます。</p>
+
+        <h2>第1条（適用）</h2>
+        <p>ユーザーは、本サービスを利用することにより、本規約の全ての記載内容に同意したものとみなされます。</p>
+
+        <h2>第2条（アカウントの発行と管理）</h2>
+        <ul>
+            <li>本サービスは、当社が公式にアカウントを発行したユーザーのみが利用可能です。</li>
+            <li>ユーザーは、自己の責任においてアカウント情報を管理し、第三者への貸与や共有を固く禁じます。</li>
+            <li>アカウント情報の漏洩により生じた損害について、当社は一切の責任を負いません。</li>
+        </ul>
+
+        <h2>第3条（禁止事項）</h2>
+        <p>ユーザーは、以下の行為を行ってはなりません。</p>
+        <ul>
+            <li>本サービスから得た情報を、当社の承諾なく公表または商用利用する行為。</li>
+            <li>本サービスのネットワークまたはシステムに過度な負荷をかける行為。</li>
+            <li>本サービスのプログラムを解析、改造、またはリバースエンジニアリングする行為。</li>
+        </ul>
+
+        <h2>第4条（免責事項）</h2>
+        <ul>
+            <li>本サービスはTikTok社の提供する外部APIに依存しています。TikTok社の仕様変更、不具合、またはAPIの提供停止により本サービスが利用できなくなった場合、当社はその責任を負いません。</li>
+            <li>データの収集には万全を期していますが、本サービスが提供する数値の正確性やリアルタイム性を完全に保証するものではありません。</li>
+            <li>本サービスの利用に関連してユーザーと第三者の間で生じた紛争について、当社は関与しません。</li>
+        </ul>
+
+        <h2>第5条（利用の中断・停止）</h2>
+        <p>当社は、システムの保守、点検、または不測の事態において、ユーザーに事前に通知することなく本サービスを中断または停止することがあります。</p>
+
+        <div class="footer">
+            <p>© 2026 株式会社PASSPOLE<br>2026年4月17日 制定</p>
+        </div>
+    </div>
+</body>
+</html>
