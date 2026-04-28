@@ -1,189 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PASSPOLE Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f7f6; }
         header { background-color: #222; color: #fff; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; }
-        .hero { background: linear-gradient(135deg, #007bff, #00d2ff); color: white; padding: 80px 20px; text-align: center; }
-        .hero h1 { font-size: 36px; margin-bottom: 20px; }
-        .hero p { font-size: 18px; max-width: 600px; margin: 0 auto 30px auto; }
-        .container { max-width: 1000px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .features { display: flex; justify-content: space-around; margin-top: 40px; }
-        .feature-box { flex: 1; margin: 0 15px; padding: 20px; background: #f9f9f9; border-radius: 8px; text-align: center; }
-        .btn-login { background-color: #fe2c55; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; text-decoration: none; }
-        .btn-login:hover { background-color: #e0224a; }
-        footer { background-color: #222; color: #888; text-align: center; padding: 20px; margin-top: 50px; }
-        footer a { color: #888; margin: 0 15px; text-decoration: none; }
         
-        /* ダッシュボード用のスタイル */
-        #dashboard-view { display: none; padding: 40px 20px; }
-        .profile-card { display: flex; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-        .profile-img { width: 80px; height: 80px; border-radius: 50%; background-color: #ccc; margin-right: 20px; }
-        .stats-grid { display: flex; gap: 20px; margin-bottom: 30px; }
-        .stat-box { background: #f1f1f1; padding: 20px; border-radius: 8px; flex: 1; text-align: center; }
-        .stat-box h3 { margin: 0 0 10px 0; font-size: 24px; color: #fe2c55; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
+        /* ログインエリアのスタイル */
+        #login-area { text-align: center; padding: 60px 20px; }
+        .input-key { padding: 12px; width: 300px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px; }
+        .btn-primary { background-color: #fe2c55; color: white; padding: 12px 30px; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .btn-primary:hover { background-color: #e0224a; }
+
+        /* ダッシュボードエリア（初期は非表示） */
+        #dashboard-area { display: none; }
+        
+        /* 目立つKPIのスタイル */
+        .kpi-grid { display: flex; gap: 20px; margin-bottom: 40px; }
+        .kpi-box { background: linear-gradient(135deg, #111, #333); color: white; padding: 30px; border-radius: 12px; flex: 1; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .kpi-box h3 { margin: 0; font-size: 42px; color: #00d2ff; }
+        .kpi-box p { margin: 10px 0 0 0; font-size: 18px; color: #ccc; }
+        .kpi-box.accent h3 { color: #fe2c55; }
+
+        /* テーブルのスタイル */
+        .section-title { font-size: 20px; border-bottom: 2px solid #fe2c55; padding-bottom: 10px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 15px; }
+        th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background-color: #f9f9f9; color: #555; }
+        tr:hover { background-color: #f1f1f1; }
+
+        /* グラフエリアのスタイル */
+        .chart-container { background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #eee; }
+        .chart-controls { margin-bottom: 20px; text-align: right; }
+        select { padding: 8px 15px; font-size: 16px; border-radius: 4px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
 
-    <div id="public-site">
-        <header>
-            <div class="logo">PASSPOLE Inc.</div>
-            <button class="btn-login" style="padding: 10px 20px; font-size: 14px;" onclick="loginWithTikTok()">Client Login</button>
-        </header>
+    <header>
+        <div class="logo">PASSPOLE Analytics</div>
+    </header>
 
-        <section class="hero">
-            <h1>Advanced Social Analytics for B2B Clients</h1>
-            <p>We provide comprehensive data visualization tools exclusively for our contracted partners.</p>
-            <button class="btn-login" onclick="loginWithTikTok()">Connect Account (Sandbox)</button>
-        </section>
-
-        <div class="container">
-            <h2 style="text-align: center;">Our Features</h2>
-            <div class="features">
-                <div class="feature-box"><h3>Profile Tracking</h3><p>Monitor your basic account information.</p></div>
-                <div class="feature-box"><h3>Engagement Stats</h3><p>Track your total likes and followers.</p></div>
-                <div class="feature-box"><h3>Content Analysis</h3><p>Review your recent video list.</p></div>
-            </div>
-        </div>
-
-        <footer>
-            <p>© 2026 PASSPOLE Inc. All rights reserved. | <a href="./terms.html">Terms of Service</a> | <a href="./privacy.html">Privacy Policy</a></p>
-        </footer>
-    </div>
-
-    <div id="dashboard-view" class="container">
-        <h1>Client Analytics Dashboard</h1>
+    <div class="container">
         
-        <div class="profile-card">
-            <div class="profile-img"></div>
-            <div>
-                <h2>Sandbox Test User</h2>
-                <p>@sandbox_client_01 (Scope: user.info.profile)</p>
+        <div id="login-area">
+            <h2 style="margin-bottom: 30px;">Client Login</h2>
+            <p>API連携のためのClient Keyを入力してください。</p>
+            <input type="text" id="clientKeyInput" class="input-key" placeholder="Client Keyを入力">
+            <button class="btn-primary" onclick="login()">ダッシュボードを開く</button>
+        </div>
+
+        <div id="dashboard-area">
+            
+            <div class="kpi-grid">
+                <div class="kpi-box">
+                    <p>総フォロワー数</p>
+                    <h3>12,450</h3>
+                </div>
+                <div class="kpi-box accent">
+                    <p>総いいね数</p>
+                    <h3>340,120</h3>
+                </div>
             </div>
+
+            <h2 class="section-title">投稿動画リスト（基本情報）</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>公開日（投稿時間）</th>
+                        <th>尺（長さ）</th>
+                        <th>タイトル（キャプション・ハッシュタグ）</th>
+                    </tr>
+                </thead>
+                <tbody id="video-table-body">
+                    </tbody>
+            </table>
+
+            <h2 class="section-title">月間パフォーマンス推移（1年分）</h2>
+            <div class="chart-container">
+                <div class="chart-controls">
+                    <label for="videoSelect"><strong>詳細を見る動画を選択：</strong></label>
+                    <select id="videoSelect" onchange="updateChart()"></select>
+                </div>
+                <canvas id="trendChart" height="100"></canvas>
+            </div>
+
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-box"><h3 id="mock-followers">12,450</h3><p>Total Followers</p></div>
-            <div class="stat-box"><h3 id="mock-likes">340,120</h3><p>Total Likes</p></div>
-            <div class="stat-box"><h3 id="mock-videos">24</h3><p>Videos Posted</p></div>
-        </div>
-
-        <h3>Recent Video Performance (Views & Likes)</h3>
-        <div style="width: 100%; max-width: 800px; margin: 0 auto 40px auto;">
-            <canvas id="performanceChart"></canvas>
-        </div>
-
-        <h3>Video Details (Scope: video.list)</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 14px;">
-            <thead>
-                <tr style="background-color: #f1f1f1; text-align: left;">
-                    <th style="padding: 10px; border-bottom: 2px solid #ddd;">Posted Date</th>
-                    <th style="padding: 10px; border-bottom: 2px solid #ddd;">Caption / Hashtags</th>
-                    <th style="padding: 10px; border-bottom: 2px solid #ddd;">Duration</th>
-                    <th style="padding: 10px; border-bottom: 2px solid #ddd;">Views</th>
-                    <th style="padding: 10px; border-bottom: 2px solid #ddd;">Likes</th>
-                    <th style="padding: 10px; border-bottom: 2px solid #ddd;">Shares</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">2026-04-20</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">Amazing sunset #vlog #travel</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">00:15</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">15,000</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">1,200</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">45</td>
-                </tr>
-                <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">2026-04-18</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">My morning routine ☕ #morning</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">00:30</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">8,400</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">650</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">12</td>
-                </tr>
-                <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">2026-04-15</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">Quick tutorial hack! #tips</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">00:45</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">22,100</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">3,100</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;">120</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div style="text-align: center; margin-top: 40px;"><a href="./" style="color: #007bff; text-decoration: none; font-weight: bold;">Log out</a></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // 【重要】ここでclient_keyを入力します
-        const CLIENT_KEY = 'sbawss30h5f8nxr0o0'; 
-        const REDIRECT_URI = 'https://tsubasa1test-cell.github.io/tiktok-dashboard/';
+        // --- 1年分のモックデータ（APIから取得する想定のデータ） ---
+        const videoData = [
+            {
+                id: "V001",
+                date: "2025-05-15 18:30",
+                duration: "00:45",
+                title: "新オフィスのルームツアー公開！ #オフィス紹介 #働き方",
+                // 12ヶ月分の推移データ（直近1年）
+                history: {
+                    labels: ['5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月', '1月', '2月', '3月', '4月'],
+                    views: [5000, 8000, 12000, 15000, 16500, 17000, 17200, 18000, 18500, 19000, 19500, 20100],
+                    likes: [300, 500, 800, 1000, 1100, 1150, 1180, 1200, 1250, 1300, 1350, 1400],
+                    shares: [10, 25, 40, 55, 60, 65, 68, 70, 75, 80, 85, 90],
+                    comments: [5, 12, 20, 28, 30, 32, 33, 35, 38, 40, 42, 45]
+                }
+            },
+            {
+                id: "V002",
+                date: "2025-08-20 20:00",
+                duration: "00:30",
+                title: "社長の1日に密着してみた👔 #ルーティン #Vlog",
+                history: {
+                    labels: ['5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月', '1月', '2月', '3月', '4月'],
+                    views: [0, 0, 0, 20000, 35000, 40000, 42000, 43000, 44000, 44500, 45000, 45500],
+                    likes: [0, 0, 0, 1500, 2800, 3100, 3200, 3250, 3300, 3350, 3400, 3450],
+                    shares: [0, 0, 0, 50, 120, 140, 150, 155, 160, 165, 170, 175],
+                    comments: [0, 0, 0, 40, 80, 95, 100, 105, 110, 115, 120, 125]
+                }
+            }
+        ];
 
-        // ログインボタンが押された時の処理
-        function loginWithTikTok() {
-            const url = 'https://www.tiktok.com/v2/auth/authorize/';
-            const params = new URLSearchParams({
-                client_key: CLIENT_KEY,
-                response_type: 'code',
-                scope: 'user.info.profile,user.info.stats,video.list',
-                redirect_uri: REDIRECT_URI,
-                state: 'passpole_demo'
-            });
-            window.location.href = url + '?' + params.toString();
+        let trendChartInstance = null; // グラフのインスタンスを保持
+
+        // ログイン処理（モック）
+        function login() {
+            const key = document.getElementById('clientKeyInput').value;
+            if (!key) {
+                alert("Client Keyを入力してください。");
+                return;
+            }
+            // 実際のAPI連携ではここでOAuth認証に飛ばしますが、今回はUI確認のため画面を切り替えます
+            document.getElementById('login-area').style.display = 'none';
+            document.getElementById('dashboard-area').style.display = 'block';
+            
+            initDashboard();
         }
 
-        // グラフを描画する処理
-        function renderChart() {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
+        // ダッシュボードの初期化
+        function initDashboard() {
+            const tbody = document.getElementById('video-table-body');
+            const select = document.getElementById('videoSelect');
+            
+            videoData.forEach(video => {
+                // 表の行を作成
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${video.id}</strong></td>
+                    <td>${video.date}</td>
+                    <td>${video.duration}</td>
+                    <td>${video.title}</td>
+                `;
+                tbody.appendChild(tr);
+
+                // プルダウンの選択肢を作成
+                const option = document.createElement('option');
+                option.value = video.id;
+                option.textContent = `${video.id}: ${video.title}`;
+                select.appendChild(option);
+            });
+
+            // 最初の動画のグラフを描画
+            updateChart();
+        }
+
+        // グラフの更新処理
+        function updateChart() {
+            const selectedId = document.getElementById('videoSelect').value;
+            const video = videoData.find(v => v.id === selectedId);
+            
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            // 既にグラフがあれば破棄して新しく描く
+            if (trendChartInstance) {
+                trendChartInstance.destroy();
+            }
+
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
                 data: {
-                    labels: ['Video 1', 'Video 2', 'Video 3'],
-                    datasets: [{
-                        label: 'Views',
-                        data: [15000, 8400, 22100],
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Likes',
-                        data: [1200, 650, 3100],
-                        type: 'line',
-                        borderColor: '#fe2c55',
-                        backgroundColor: '#fe2c55',
-                        borderWidth: 2,
-                        yAxisID: 'y1'
-                    }]
+                    labels: video.history.labels,
+                    datasets: [
+                        { label: '再生数', data: video.history.views, borderColor: '#007bff', backgroundColor: 'rgba(0,123,255,0.1)', yAxisID: 'y' },
+                        { label: 'いいね数', data: video.history.likes, borderColor: '#fe2c55', backgroundColor: 'transparent', yAxisID: 'y1' },
+                        { label: '共有数', data: video.history.shares, borderColor: '#28a745', backgroundColor: 'transparent', yAxisID: 'y1' },
+                        { label: 'コメント数', data: video.history.comments, borderColor: '#ffc107', backgroundColor: 'transparent', yAxisID: 'y1' }
+                    ]
                 },
                 options: {
                     responsive: true,
+                    interaction: { mode: 'index', intersect: false },
                     scales: {
-                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Views' } },
-                        y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Likes' }, grid: { drawOnChartArea: false } }
+                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '再生数' } },
+                        y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'アクション数 (いいね/共有/コメント)' }, grid: { drawOnChartArea: false } }
                     }
                 }
             });
         }
-
-        // ページ読み込み時、URLにcodeが含まれていたらダッシュボードを表示
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('code')) {
-                document.getElementById('public-site').style.display = 'none';
-                document.getElementById('dashboard-view').style.display = 'block';
-                renderChart(); 
-            }
-        };
     </script>
 </body>
 </html>
