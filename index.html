@@ -6,15 +6,15 @@
     <title>PASSPOLE Analytics Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f7f6; }
+        body { font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f7f6; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* ヘッダーのスタイル */
         header { background-color: #222; color: #fff; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; }
+        .header-btn { background-color: transparent; color: #fff; border: 1px solid #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .header-btn:hover { background-color: #fff; color: #222; }
         
-        /* ▼ ヘッダーに追加するボタンのスタイル ▼ */
-        .btn-header { background-color: #fff; color: #222; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold; transition: background-color 0.3s; }
-        .btn-header:hover { background-color: #ddd; }
-        
-        .container { max-width: 1200px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex: 1; width: 90%; }
         
         /* ログインエリアのスタイル */
         #login-area { text-align: center; padding: 60px 20px; }
@@ -43,14 +43,19 @@
         .chart-container { background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #eee; }
         .chart-controls { margin-bottom: 20px; text-align: right; }
         select { padding: 8px 15px; font-size: 16px; border-radius: 4px; border: 1px solid #ccc; }
+
+        /* フッターのスタイル */
+        footer { background-color: #f4f7f6; text-align: center; padding: 20px; margin-top: auto; font-size: 14px; border-top: 1px solid #ddd; }
+        footer a { color: #007bff; text-decoration: none; margin: 0 15px; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">PASSPOLE Analytics</div>
-        <!-- ▼ ここに comment.html へ繋がるボタンを配置 ▼ -->
-        <a href="comment.html" class="btn-header">💬 コメント抽出ツール</a>
+        <!-- ヘッダーにコメントツールへのボタンを追加 -->
+        <a href="comment.html" class="header-btn">コメント抽出ツール</a>
     </header>
 
     <div class="container">
@@ -86,7 +91,8 @@
                     </tr>
                 </thead>
                 <tbody id="video-table-body">
-                    </tbody>
+                    <!-- JSで動的に生成されます -->
+                </tbody>
             </table>
 
             <h2 class="section-title">月間パフォーマンス推移（1年分）</h2>
@@ -101,6 +107,13 @@
         </div>
     </div>
 
+    <!-- 画面下部に利用規約とプライバシーポリシーのリンクを追加 -->
+    <footer>
+        <p style="margin-bottom: 10px; color: #666;">&copy; 2026 PASSPOLE Inc. All rights reserved.</p>
+        <a href="terms.html">利用規約 (Terms of Service)</a> | 
+        <a href="privacy.html">プライバシーポリシー (Privacy Policy)</a>
+    </footer>
+
     <script>
         // --- 1年分のモックデータ（APIから取得する想定のデータ） ---
         const videoData = [
@@ -109,7 +122,6 @@
                 date: "2025-05-15 18:30",
                 duration: "00:45",
                 title: "新オフィスのルームツアー公開！ #オフィス紹介 #働き方",
-                // 12ヶ月分の推移データ（直近1年）
                 history: {
                     labels: ['5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月', '1月', '2月', '3月', '4月'],
                     views: [5000, 8000, 12000, 15000, 16500, 17000, 17200, 18000, 18500, 19000, 19500, 20100],
@@ -142,7 +154,6 @@
                 alert("Client Keyを入力してください。");
                 return;
             }
-            // 実際のAPI連携ではここでOAuth認証に飛ばしますが、今回はUI確認のため画面を切り替えます
             document.getElementById('login-area').style.display = 'none';
             document.getElementById('dashboard-area').style.display = 'block';
             
@@ -155,7 +166,6 @@
             const select = document.getElementById('videoSelect');
             
             videoData.forEach(video => {
-                // 表の行を作成
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${video.id}</strong></td>
@@ -165,14 +175,12 @@
                 `;
                 tbody.appendChild(tr);
 
-                // プルダウンの選択肢を作成
                 const option = document.createElement('option');
                 option.value = video.id;
                 option.textContent = `${video.id}: ${video.title}`;
                 select.appendChild(option);
             });
 
-            // 最初の動画のグラフを描画
             updateChart();
         }
 
@@ -183,7 +191,6 @@
             
             const ctx = document.getElementById('trendChart').getContext('2d');
             
-            // 既にグラフがあれば破棄して新しく描く
             if (trendChartInstance) {
                 trendChartInstance.destroy();
             }
