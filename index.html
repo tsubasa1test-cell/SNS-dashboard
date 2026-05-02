@@ -10,6 +10,10 @@
         header { background-color: #222; color: #fff; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; }
         
+        /* ▼ ヘッダーに追加するボタンのスタイル ▼ */
+        .btn-header { background-color: #fff; color: #222; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold; transition: background-color 0.3s; }
+        .btn-header:hover { background-color: #ddd; }
+        
         .container { max-width: 1200px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         
         /* ログインエリアのスタイル */
@@ -45,6 +49,8 @@
 
     <header>
         <div class="logo">PASSPOLE Analytics</div>
+        <!-- ▼ ここに comment.html へ繋がるボタンを配置 ▼ -->
+        <a href="comment.html" class="btn-header">💬 コメント抽出ツール</a>
     </header>
 
     <div class="container">
