@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok コメント自動抽出ツール</title>
+    <style>
+        body { font-family: "Helvetica Neue", Arial, sans-serif; padding: 30px; background-color: #f4f7f6; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #fe2c55; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        textarea { width: 100%; height: 200px; padding: 15px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-bottom: 20px; }
+        .btn { background-color: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background-color: #0056b3; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; font-size: 14px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f1f1f1; font-weight: bold; color: #555; }
+        tr:hover { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>TikTok コメント自動抽出ツール</h1>
+        <p>PC版TikTokのコメント画面を全選択（Ctrl+A / Command+A）してコピーし、下のボックスに貼り付けてください。</p>
+        
+        <!-- コピペ貼り付けエリア -->
+        <textarea id="rawTextInput" placeholder="ここにコピペしたテキストを貼り付けてください..."></textarea>
+        
+        <button class="btn" onclick="extractComments()">表に変換する</button>
+
+        <!-- 抽出結果を表示する表 -->
+        <table id="resultTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>時間</th>
+                    <th>ユーザー名</th>
+                    <th>コメント内容</th>
+                    <th>対象動画</th>
+                    <th>説明</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- ここにJavaScriptで抽出したデータが入ります -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function extractComments() {
+            // テキストエリアの中身を取得
+            const rawText = document.getElementById('rawTextInput').value;
+            
+            // 改行ごとに分割し、前後の空白を消し、完全に空っぽの行を削除（配列にする）
+            const lines = rawText.split('\n')
+                                 .map(line => line.trim())
+                                 .filter(line => line !== "");
+
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = ""; // 前の結果をクリア
+
+            let extractedCount = 0;
+
+            // 配列を上から順番に確認していく
+            for (let i = 0; i < lines.length; i++) {
+                
+                // コメントの目印である「 · （中黒）」を見つけたら抽出開始！
+                if (lines[i] === '·') {
+                    
+                    // 中黒の位置(i)を基準に、前後から情報を引っこ抜く
+                    const username = lines[i - 2] || "不明";
+                    const time = lines[i + 1] || "不明";
+                    const comment = lines[i + 2] || "不明";
+                    
+                    let videoTitle = "不明";
+                    let description = "";
+
+                    // 「削除」の文字の次の行が動画タイトルになる
+                    if (lines[i + 5] === "削除" && (i + 6) < lines.length) {
+                        videoTitle = lines[i + 6];
+                        description = lines[i + 7] || "";
+                    }
+
+                    // 抽出したデータをHTMLの表（<tr>と<td>）として作成
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${time}</td>
+                        <td>${username}</td>
+                        <td>${comment}</td>
+                        <td>${videoTitle}</td>
+                        <td>${description}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                    extractedCount++;
+                }
+            }
+
+            if (extractedCount > 0) {
+                // 表を表示する
+                document.getElementById('resultTable').style.display = 'table';
+            } else {
+                alert("コメントを抽出できませんでした。コピペの形式が正しいか確認してください。");
+            }
+        }
+    </script>
+
+</body>
+</html>
