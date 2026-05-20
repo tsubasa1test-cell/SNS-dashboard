@@ -14,7 +14,7 @@
         .header-btn { background-color: transparent; color: #fff; border: 1px solid #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 14px; transition: 0.3s; }
         .header-btn:hover { background-color: #fff; color: #222; }
         
-        /* ▼ 新規追加：サービス紹介（Hero & Features）のスタイル ▼ */
+        /* サービス紹介（Hero & Features）のスタイル */
         .hero-section { background: linear-gradient(135deg, #007bff, #00d2ff); color: white; padding: 60px 20px; text-align: center; }
         .hero-section h1 { font-size: 36px; margin-bottom: 20px; }
         .hero-section p { font-size: 18px; max-width: 700px; margin: 0 auto; opacity: 0.9; }
@@ -23,7 +23,6 @@
         .feature-box { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex: 1; text-align: center; }
         .feature-box h3 { color: #fe2c55; font-size: 20px; margin-bottom: 15px; }
         .feature-box p { font-size: 14px; color: #555; }
-        /* ▲ ここまで ▲ */
 
         .container { max-width: 1200px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex: 1; width: 90%; }
         
@@ -100,14 +99,40 @@
     </div>
     <div class="container" id="dashboard-area">
         
-        <div class="kpi-grid">
-            <div class="kpi-box">
-                <p>Total Followers</p>
-                <h3>12,450</h3>
+        <div style="display: flex; align-items: center; background: #fff; padding: 25px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <div style="width: 90px; height: 90px; border-radius: 50%; background: #ccc; margin-right: 25px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; color: #fff; font-weight: bold;">Avatar</div>
+            
+            <div style="flex: 1;">
+                <h2 style="margin: 0 0 5px 0; font-size: 24px; color: #222;">
+                    Sandbox Client 
+                    <span style="font-size: 12px; background: #10a37f; color: #fff; padding: 3px 8px; border-radius: 12px; vertical-align: middle; margin-left: 10px;">Verified Account</span>
+                </h2>
+                
+                <p style="margin: 0 0 10px 0; color: #555; font-size: 15px;">Bio: Publishing Consulting for SME managers. Digital Nomad life focusing on business automation and marketing.</p>
+                
+                <p style="margin: 0; font-size: 14px;">
+                    <a href="#" style="color: #007bff; text-decoration: none; margin-right: 15px;">🔗 Web Link</a>
+                    <a href="#" style="color: #007bff; text-decoration: none;">📱 Deep Link</a>
+                </p>
             </div>
-            <div class="kpi-box accent">
-                <p>Total Likes</p>
-                <h3>340,120</h3>
+        </div>
+
+        <div class="kpi-grid" style="display: flex; gap: 15px; margin-bottom: 40px;">
+            <div class="kpi-box" style="padding: 20px;">
+                <p style="margin: 0 0 5px 0; font-size: 14px;">Followers</p>
+                <h3 style="font-size: 28px;">12,450</h3>
+            </div>
+            <div class="kpi-box" style="padding: 20px; background: linear-gradient(135deg, #444, #666);">
+                <p style="margin: 0 0 5px 0; font-size: 14px;">Following</p>
+                <h3 style="font-size: 28px; color: #fff;">185</h3>
+            </div>
+            <div class="kpi-box accent" style="padding: 20px;">
+                <p style="margin: 0 0 5px 0; font-size: 14px;">Total Likes</p>
+                <h3 style="font-size: 28px;">340,120</h3>
+            </div>
+            <div class="kpi-box" style="padding: 20px; background: linear-gradient(135deg, #444, #666);">
+                <p style="margin: 0 0 5px 0; font-size: 14px;">Total Videos</p>
+                <h3 style="font-size: 28px; color: #fff;">24</h3>
             </div>
         </div>
 
@@ -180,7 +205,6 @@
                 alert("Please enter your API Key.");
                 return;
             }
-            // ログインボタンを押したら、一般向けサイト部分を隠してダッシュボードを表示する
             document.getElementById('public-website-view').style.display = 'none';
             document.getElementById('dashboard-area').style.display = 'block';
             
